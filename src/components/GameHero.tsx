@@ -22,7 +22,7 @@ export function GameHero() {
           variant="secondary" 
           className="mb-6 px-4 py-2 text-lg font-bold animate-bounce-in bg-gradient-primary border-0"
         >
-          Launching July 22, 2025 at 12 AM
+          Launching December 1, 2025 at 12 AM
         </Badge>
         
         <h1 className="text-6xl md:text-8xl font-black mb-6 bg-gradient-hero bg-clip-text text-transparent animate-float">

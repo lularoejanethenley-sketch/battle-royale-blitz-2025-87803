@@ -110,39 +110,14 @@ export const BattleRoyaleCard = () => {
             </div>
 
             <div className="space-y-4">
-              <Dialog open={showApplication} onOpenChange={setShowApplication}>
-                <DialogTrigger asChild>
-                  <Button size="lg" className="w-full bg-gradient-primary hover:shadow-glow">
-                    <CreditCard className="w-5 h-5 mr-2" />
-                    Apply for Battle Royale Card
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-4xl max-h-[80vh] overflow-hidden">
-                  <DialogHeader>
-                    <DialogTitle className="flex items-center gap-2">
-                      <CreditCard className="w-5 h-5" />
-                      Apply for Your Battle Royale Card
-                    </DialogTitle>
-                  </DialogHeader>
-                  <div className="h-[600px] w-full">
-                    <iframe
-                      src="https://www.citibank.com/cards"
-                      className="w-full h-full border-0 rounded-lg"
-                      title="Citibank Card Application"
-                    />
-                  </div>
-                  <div className="flex justify-center">
-                    <Button
-                      variant="outline"
-                      onClick={() => window.open('https://www.citibank.com/cards', '_blank')}
-                      className="flex items-center gap-2"
-                    >
-                      <ExternalLink className="w-4 h-4" />
-                      Open in New Tab
-                    </Button>
-                  </div>
-                </DialogContent>
-              </Dialog>
+              <Button 
+                size="lg" 
+                className="w-full bg-gradient-primary hover:shadow-glow"
+                onClick={() => window.open('https://docs.google.com/forms/d/e/1FAIpQLSfBi62gFTJPQYsI-8x719rJLbRS87fgoUakAnrXo2W1M-arJg/viewform?usp=header', '_blank')}
+              >
+                <CreditCard className="w-5 h-5 mr-2" />
+                Apply for Battle Royale Card
+              </Button>
 
               <p className="text-xs text-muted-foreground text-center">
                 * Credit approval required. Terms and conditions apply. 

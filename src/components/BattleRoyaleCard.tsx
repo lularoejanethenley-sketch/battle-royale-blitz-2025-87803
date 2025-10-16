@@ -1,42 +1,13 @@
 import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { CreditCard, Shield, Zap, Trophy, ExternalLink, Sparkles, Camera, Upload } from 'lucide-react';
-import { toast } from '@/components/ui/use-toast';
+import { CreditCard, Shield, Zap, Trophy, Sparkles, Camera } from 'lucide-react';
+import { CardActivationForm } from './CardActivationForm';
 
 export const BattleRoyaleCard = () => {
   const [showActivation, setShowActivation] = useState(false);
-  const [cardPhoto, setCardPhoto] = useState<string | null>(null);
-
-  const handlePhotoCapture = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setCardPhoto(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleActivation = () => {
-    if (cardPhoto) {
-      toast({
-        title: "Card Activated!",
-        description: "Your Battle Royale Card has been successfully activated.",
-      });
-      setShowActivation(false);
-      setCardPhoto(null);
-    } else {
-      toast({
-        title: "Photo Required",
-        description: "Please take a photo of the back of your card to activate it.",
-        variant: "destructive",
-      });
-    }
-  };
 
   const cardBenefits = [
     {
@@ -167,59 +138,7 @@ export const BattleRoyaleCard = () => {
                       Activate Your Battle Royale Card
                     </DialogTitle>
                   </DialogHeader>
-                  <div className="space-y-4">
-                    <p className="text-sm text-muted-foreground">
-                      Take a photo of the back of your card to complete activation
-                    </p>
-                    
-                    <div className="border-2 border-dashed border-border rounded-lg p-8 text-center">
-                      {cardPhoto ? (
-                        <div className="space-y-4">
-                          <img 
-                            src={cardPhoto} 
-                            alt="Card back" 
-                            className="w-full rounded-lg"
-                          />
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => setCardPhoto(null)}
-                            className="w-full"
-                          >
-                            <Upload className="w-4 h-4 mr-2" />
-                            Take Another Photo
-                          </Button>
-                        </div>
-                      ) : (
-                        <label className="cursor-pointer block">
-                          <input
-                            type="file"
-                            accept="image/*"
-                            capture="environment"
-                            onChange={handlePhotoCapture}
-                            className="hidden"
-                          />
-                          <div className="flex flex-col items-center gap-3">
-                            <Camera className="w-12 h-12 text-muted-foreground" />
-                            <div>
-                              <p className="font-semibold">Take Photo</p>
-                              <p className="text-xs text-muted-foreground">
-                                Click to use camera
-                              </p>
-                            </div>
-                          </div>
-                        </label>
-                      )}
-                    </div>
-
-                    <Button 
-                      onClick={handleActivation}
-                      className="w-full bg-gradient-primary"
-                      disabled={!cardPhoto}
-                    >
-                      Activate Card
-                    </Button>
-                  </div>
+                  <CardActivationForm onSuccess={() => setShowActivation(false)} />
                 </DialogContent>
               </Dialog>
 

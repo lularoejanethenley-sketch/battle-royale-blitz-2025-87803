@@ -2,6 +2,7 @@ import { useAdmin } from '@/contexts/AdminContext';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Settings, Users, Shield } from 'lucide-react';
+import { AdminCardManagement } from './AdminCardManagement';
 
 export const AdminPanel = () => {
   const { isAdmin } = useAdmin();
@@ -23,6 +24,8 @@ export const AdminPanel = () => {
           </Badge>
         </div>
       </div>
+
+      <AdminCardManagement />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <Card className="bg-gradient-card border border-border shadow-card">

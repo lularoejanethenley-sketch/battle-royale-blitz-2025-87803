@@ -3,10 +3,40 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { CreditCard, Shield, Zap, Trophy, ExternalLink, Sparkles } from 'lucide-react';
+import { CreditCard, Shield, Zap, Trophy, ExternalLink, Sparkles, Camera, Upload } from 'lucide-react';
+import { toast } from '@/components/ui/use-toast';
 
 export const BattleRoyaleCard = () => {
-  const [showApplication, setShowApplication] = useState(false);
+  const [showActivation, setShowActivation] = useState(false);
+  const [cardPhoto, setCardPhoto] = useState<string | null>(null);
+
+  const handlePhotoCapture = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setCardPhoto(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleActivation = () => {
+    if (cardPhoto) {
+      toast({
+        title: "Card Activated!",
+        description: "Your Battle Royale Card has been successfully activated.",
+      });
+      setShowActivation(false);
+      setCardPhoto(null);
+    } else {
+      toast({
+        title: "Photo Required",
+        description: "Please take a photo of the back of your card to activate it.",
+        variant: "destructive",
+      });
+    }
+  };
 
   const cardBenefits = [
     {
@@ -118,6 +148,80 @@ export const BattleRoyaleCard = () => {
                 <CreditCard className="w-5 h-5 mr-2" />
                 Apply for Battle Royale Card
               </Button>
+
+              <Dialog open={showActivation} onOpenChange={setShowActivation}>
+                <DialogTrigger asChild>
+                  <Button 
+                    size="lg" 
+                    variant="outline"
+                    className="w-full"
+                  >
+                    <Camera className="w-5 h-5 mr-2" />
+                    Activate Your Card
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-md">
+                  <DialogHeader>
+                    <DialogTitle className="flex items-center gap-2">
+                      <Camera className="w-5 h-5" />
+                      Activate Your Battle Royale Card
+                    </DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <p className="text-sm text-muted-foreground">
+                      Take a photo of the back of your card to complete activation
+                    </p>
+                    
+                    <div className="border-2 border-dashed border-border rounded-lg p-8 text-center">
+                      {cardPhoto ? (
+                        <div className="space-y-4">
+                          <img 
+                            src={cardPhoto} 
+                            alt="Card back" 
+                            className="w-full rounded-lg"
+                          />
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setCardPhoto(null)}
+                            className="w-full"
+                          >
+                            <Upload className="w-4 h-4 mr-2" />
+                            Take Another Photo
+                          </Button>
+                        </div>
+                      ) : (
+                        <label className="cursor-pointer block">
+                          <input
+                            type="file"
+                            accept="image/*"
+                            capture="environment"
+                            onChange={handlePhotoCapture}
+                            className="hidden"
+                          />
+                          <div className="flex flex-col items-center gap-3">
+                            <Camera className="w-12 h-12 text-muted-foreground" />
+                            <div>
+                              <p className="font-semibold">Take Photo</p>
+                              <p className="text-xs text-muted-foreground">
+                                Click to use camera
+                              </p>
+                            </div>
+                          </div>
+                        </label>
+                      )}
+                    </div>
+
+                    <Button 
+                      onClick={handleActivation}
+                      className="w-full bg-gradient-primary"
+                      disabled={!cardPhoto}
+                    >
+                      Activate Card
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
 
               <p className="text-xs text-muted-foreground text-center">
                 * Credit approval required. Terms and conditions apply. 

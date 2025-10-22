@@ -1,13 +1,13 @@
-import { useAdmin } from '@/contexts/AdminContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Settings, Users, Shield } from 'lucide-react';
 import { AdminCardManagement } from './AdminCardManagement';
 
 export const AdminPanel = () => {
-  const { isAdmin } = useAdmin();
+  const { isAdmin, user } = useAuth();
 
-  if (!isAdmin) {
+  if (!isAdmin || !user) {
     return null;
   }
 

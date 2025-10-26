@@ -80,7 +80,7 @@ serve(async (req) => {
 
     if (insertError) {
       console.error('Database insert error:', insertError);
-      throw insertError;
+      throw new Error('Failed to save service request');
     }
 
     console.log('Service request saved successfully:', serviceRequest);

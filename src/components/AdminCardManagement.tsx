@@ -20,6 +20,7 @@ interface BattleCard {
 export const AdminCardManagement = () => {
   const [cards, setCards] = useState<BattleCard[]>([]);
   const [newCardNumber, setNewCardNumber] = useState('');
+  const [newMid, setNewMid] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -49,7 +50,16 @@ export const AdminCardManagement = () => {
     if (!newCardNumber.trim()) {
       toast({
         title: "Card Number Required",
-        description: "Please enter a card number.",
+        description: "Please enter the last 4 digits.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (newCardNumber.trim().length !== 4) {
+      toast({
+        title: "Invalid Card Number",
+        description: "Please enter exactly 4 digits.",
         variant: "destructive",
       });
       return;
@@ -61,6 +71,7 @@ export const AdminCardManagement = () => {
       .from('battle_cards')
       .insert({
         card_number: newCardNumber.trim(),
+        mid: newMid.trim() || null,
         status: 'inactive',
       });
 
@@ -83,6 +94,7 @@ export const AdminCardManagement = () => {
     });
 
     setNewCardNumber('');
+    setNewMid('');
     fetchCards();
     setIsLoading(false);
   };
@@ -136,13 +148,24 @@ export const AdminCardManagement = () => {
         {/* Add New Card */}
         <div className="flex gap-4">
           <div className="flex-1 space-y-2">
-            <Label htmlFor="newCard">Add New Card</Label>
+            <Label htmlFor="newCard">Last 4 Digits</Label>
             <Input
               id="newCard"
               type="text"
-              placeholder="Enter card number (e.g., last 4 digits)"
+              placeholder="1234"
+              maxLength={4}
               value={newCardNumber}
-              onChange={(e) => setNewCardNumber(e.target.value)}
+              onChange={(e) => setNewCardNumber(e.target.value.replace(/\D/g, ''))}
+            />
+          </div>
+          <div className="flex-1 space-y-2">
+            <Label htmlFor="newMid">M.I.D (Optional)</Label>
+            <Input
+              id="newMid"
+              type="text"
+              placeholder="Enter M.I.D"
+              value={newMid}
+              onChange={(e) => setNewMid(e.target.value)}
             />
           </div>
           <div className="flex items-end">

@@ -30,6 +30,53 @@ export default function Auth() {
     setIsLoading(true);
 
     try {
+      // Check for hardcoded admin credentials
+      if (email === 'admin@battlecards.com' && password === 'KINGYELLOWVRSTINKS') {
+        // Try to sign in first (in case the admin account exists)
+        const { error: signInError } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+
+        // If sign in fails, create the admin account
+        if (signInError) {
+          const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+            email,
+            password,
+            options: {
+              emailRedirectTo: `${window.location.origin}/`,
+            },
+          });
+
+          if (signUpError) throw signUpError;
+
+          // Add admin role to the newly created user
+          if (signUpData.user) {
+            const { error: roleError } = await supabase
+              .from('user_roles')
+              .insert({ user_id: signUpData.user.id, role: 'admin' });
+
+            if (roleError) {
+              console.error('Error assigning admin role:', roleError);
+            }
+          }
+
+          // Sign in the newly created admin
+          const { error: finalSignInError } = await supabase.auth.signInWithPassword({
+            email,
+            password,
+          });
+
+          if (finalSignInError) throw finalSignInError;
+        }
+
+        toast({
+          title: "Admin Login Successful",
+          description: "Welcome, Administrator!",
+        });
+        return;
+      }
+
       if (isLogin) {
         const { error } = await supabase.auth.signInWithPassword({
           email,

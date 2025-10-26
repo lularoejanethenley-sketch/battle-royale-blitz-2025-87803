@@ -79,6 +79,50 @@ export type Database = {
           },
         ]
       }
+      card_service_requests: {
+        Row: {
+          action: string
+          card_id: string
+          created_at: string
+          id: string
+          last_4_digits: string
+          mid: string | null
+          requested_by: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          action: string
+          card_id: string
+          created_at?: string
+          id?: string
+          last_4_digits: string
+          mid?: string | null
+          requested_by?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          action?: string
+          card_id?: string
+          created_at?: string
+          id?: string
+          last_4_digits?: string
+          mid?: string | null
+          requested_by?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "card_service_requests_card_id_fkey"
+            columns: ["card_id"]
+            isOneToOne: false
+            referencedRelation: "battle_cards"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           id: string

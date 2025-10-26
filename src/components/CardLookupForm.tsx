@@ -44,7 +44,7 @@ export const CardLookupForm = () => {
 
       toast({
         title: "Success",
-        description: "Your request has been submitted",
+        description: `Service request saved. M.I.D: ${data.mid}`,
       });
 
       setLast4("");

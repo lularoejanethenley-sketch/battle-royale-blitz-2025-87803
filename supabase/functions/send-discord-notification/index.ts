@@ -65,64 +65,32 @@ serve(async (req) => {
 
     console.log('Found card:', { mid, status: card.status });
 
-    // Send to Discord webhook
-    const discordWebhookUrl = 'https://discord.com/api/webhooks/1351700188577923195/YGQkERD6R-bvLNqFoRqcCkQK50VdwcIK2ogCte5QGRYNqgxrMMFlV9RucsYo-5B_VLCe';
-    
-    const discordPayload = {
-      embeds: [{
-        title: '📋 Card Service Request',
-        color: 0x5865F2,
-        fields: [
-          {
-            name: 'M.I.D',
-            value: mid,
-            inline: true
-          },
-          {
-            name: 'Last 4 Digits',
-            value: last4Digits,
-            inline: true
-          },
-          {
-            name: 'Action',
-            value: action.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-            inline: false
-          },
-          {
-            name: 'Card Status',
-            value: card.status,
-            inline: true
-          },
-          {
-            name: 'Timestamp',
-            value: new Date().toISOString(),
-            inline: true
-          }
-        ]
-      }]
-    };
+    // Save service request to database
+    const { data: serviceRequest, error: insertError } = await supabase
+      .from('card_service_requests')
+      .insert({
+        card_id: card.id,
+        mid: mid,
+        last_4_digits: last4Digits,
+        action: action,
+        status: 'pending'
+      })
+      .select()
+      .single();
 
-    const discordResponse = await fetch(discordWebhookUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(discordPayload),
-    });
-
-    if (!discordResponse.ok) {
-      const discordError = await discordResponse.text();
-      console.error('Discord webhook error:', discordError);
-      throw new Error('Failed to send Discord notification');
+    if (insertError) {
+      console.error('Database insert error:', insertError);
+      throw insertError;
     }
 
-    console.log('Discord notification sent successfully');
+    console.log('Service request saved successfully:', serviceRequest);
 
     return new Response(
       JSON.stringify({ 
         success: true, 
         mid,
-        message: 'Request submitted successfully' 
+        requestId: serviceRequest.id,
+        message: 'Service request saved successfully' 
       }),
       { 
         status: 200, 
